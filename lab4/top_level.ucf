@@ -1,0 +1,87 @@
+NET "seg7<0>" LOC = "L18";
+NET "seg7<1>" LOC = "F18";
+NET "seg7<2>" LOC = "D17";
+NET "seg7<3>" LOC = "D16";
+NET "seg7<4>" LOC = "G14";
+NET "seg7<5>" LOC = "J17";
+NET "seg7<6>" LOC = "H14";
+
+NET "push_buttons<0>" LOC = "B18";
+NET "push_buttons<1>" LOC = "D18";
+NET "push_buttons<2>" LOC = "E18";
+#NET "push_buttons<3>" LOC = "H13";
+
+NET "slider_switches<0>" LOC = "G18";
+NET "slider_switches<1>" LOC = "H18";
+NET "slider_switches<2>" LOC = "K18";
+NET "slider_switches<3>" LOC = "K17";
+NET "slider_switches<4>" LOC = "L14";
+NET "slider_switches<5>" LOC = "L13";
+NET "slider_switches<6>" LOC = "N17";
+NET "slider_switches<7>" LOC = "R17";
+
+NET "leds<0>" LOC = "J14";
+NET "leds<1>" LOC = "J15";
+NET "leds<2>" LOC = "K15";
+NET "leds<3>" LOC = "K14";
+NET "leds<4>" LOC = "E17";
+NET "leds<5>" LOC = "P15";
+NET "leds<6>" LOC = "F4";
+NET "leds<7>" LOC = "R4";
+
+NET "anodes<0>" LOC = "F17";
+NET "anodes<1>" LOC = "H17";
+NET "anodes<2>" LOC = "C18";
+NET "anodes<3>" LOC = "F15";
+
+NET "clk50MHz" LOC = "B8";
+ 
+NET "RAM_Addr<1>" LOC = "J1"; 
+NET "RAM_Addr<2>" LOC = "J2";
+NET "RAM_Addr<3>" LOC = "H4";
+NET "RAM_Addr<4>" LOC = "H1";
+NET "RAM_Addr<5>" LOC = "H2";
+NET "RAM_Addr<6>" LOC = "J5";
+NET "RAM_Addr<7>" LOC = "H3";
+NET "RAM_Addr<8>" LOC = "H6";
+NET "RAM_Addr<9>" LOC = "F1";
+NET "RAM_Addr<10>" LOC = "G3";
+NET "RAM_Addr<11>" LOC = "G6";
+NET "RAM_Addr<12>" LOC = "G5";
+NET "RAM_Addr<13>" LOC = "G4";
+NET "RAM_Addr<14>" LOC = "F2";
+NET "RAM_Addr<15>" LOC = "E1";
+NET "RAM_Addr<16>" LOC = "M5";
+NET "RAM_Addr<17>" LOC = "E2";
+NET "RAM_Addr<18>" LOC = "C2";
+NET "RAM_Addr<19>" LOC = "C1";
+NET "RAM_Addr<20>" LOC = "D2";
+NET "RAM_Addr<21>" LOC = "K3";
+NET "RAM_Addr<22>" LOC = "D1";
+NET "RAM_Addr<23>" LOC = "K6";
+
+NET "RAM_Data<0>" LOC = "L1";
+NET "RAM_Data<1>" LOC = "L4";
+NET "RAM_Data<2>" LOC = "L6";
+NET "RAM_Data<3>" LOC = "M4";
+NET "RAM_Data<4>" LOC = "N5";
+NET "RAM_Data<5>" LOC = "P1";
+NET "RAM_Data<6>" LOC = "P2";
+NET "RAM_Data<7>" LOC = "R2";
+NET "RAM_Data<8>" LOC = "L3";
+NET "RAM_Data<9>" LOC = "L5";
+NET "RAM_Data<10>" LOC = "M3";
+NET "RAM_Data<11>" LOC = "M6";
+NET "RAM_Data<12>" LOC = "L2";
+NET "RAM_Data<13>" LOC = "N4";
+NET "RAM_Data<14>" LOC = "R3";
+NET "RAM_Data<15>" LOC = "T1";
+
+NET "RAM_OEb" LOC = "T2";
+NET "RAM_WE" LOC = "N7";
+NET "RAM_Adv" LOC = "J4";
+NET "RAM_Clk" LOC = "H5";
+NET "RAM_UB" LOC = "K4";
+NET "RAM_LB" LOC = "K5";
+NET "RAM_CE" LOC = "R6";
+NET "RAM_Cre" LOC = "P7";

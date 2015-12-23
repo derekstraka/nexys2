@@ -1,0 +1,22 @@
+NET "seg7<0>" LOC = "L18" |IOSTANDARD="LVTTL" | DRIVE=16;
+NET "seg7<1>" LOC = "F18" |IOSTANDARD="LVTTL" | DRIVE=16;
+NET "seg7<2>" LOC = "D17" |IOSTANDARD="LVTTL" | DRIVE=16;
+NET "seg7<3>" LOC = "D16" |IOSTANDARD="LVTTL" | DRIVE=16;
+NET "seg7<4>" LOC = "G14" |IOSTANDARD="LVTTL" | DRIVE=16;
+NET "seg7<5>" LOC = "J17" |IOSTANDARD="LVTTL" | DRIVE=16;
+NET "seg7<6>" LOC = "H14" |IOSTANDARD="LVTTL" | DRIVE=16;
+
+NET "slider_switches<0>" LOC = "G18";
+NET "slider_switches<1>" LOC = "H18";
+NET "slider_switches<2>" LOC = "K18";
+NET "slider_switches<3>" LOC = "K17";
+NET "slider_switches<4>" LOC = "L14";
+NET "slider_switches<5>" LOC = "L13";
+
+NET "anodes<0>" LOC = "F17" |IOSTANDARD="LVTTL" | DRIVE=16;
+NET "anodes<1>" LOC = "H17" |IOSTANDARD="LVTTL" | DRIVE=16;
+NET "anodes<2>" LOC = "C18" |IOSTANDARD="LVTTL" | DRIVE=16;
+NET "anodes<3>" LOC = "F15" |IOSTANDARD="LVTTL" | DRIVE=16 ;
+
+NET "clk50MHz" LOC = "B8";
+NET "dac_out" LOC = "M16" |IOSTANDARD="LVTTL" | DRIVE=16;

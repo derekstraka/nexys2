@@ -1,0 +1,35 @@
+NET "seg7<0>" LOC = "L18";
+NET "seg7<1>" LOC = "F18";
+NET "seg7<2>" LOC = "D17";
+NET "seg7<3>" LOC = "D16";
+NET "seg7<4>" LOC = "G14";
+NET "seg7<5>" LOC = "J17";
+NET "seg7<6>" LOC = "H14";
+
+NET "push_buttons<0>" LOC = "B18";
+NET "push_buttons<1>" LOC = "D18";
+NET "push_buttons<2>" LOC = "E18";
+NET "push_buttons<3>" LOC = "H13";
+
+NET "slider_switches<0>" LOC = "G18";
+NET "slider_switches<1>" LOC = "H18";
+NET "slider_switches<2>" LOC = "K18";
+NET "slider_switches<3>" LOC = "K17";
+NET "slider_switches<4>" LOC = "L14";
+NET "slider_switches<5>" LOC = "L13";
+NET "slider_switches<6>" LOC = "N17";
+NET "slider_switches<7>" LOC = "R17";
+
+NET "leds<0>" LOC = "J14";
+NET "leds<1>" LOC = "J15";
+NET "leds<2>" LOC = "K15";
+NET "leds<3>" LOC = "K14";
+NET "leds<4>" LOC = "E17";
+NET "leds<5>" LOC = "P15";
+NET "leds<6>" LOC = "F4";
+NET "leds<7>" LOC = "R4";
+
+NET "anodes<0>" LOC = "F17";
+NET "anodes<1>" LOC = "H17";
+NET "anodes<2>" LOC = "C18";
+NET "anodes<3>" LOC = "F15";

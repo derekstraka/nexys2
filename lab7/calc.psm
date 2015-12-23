@@ -1,0 +1,240 @@
+NAMEREG sF, SLIDER_REG    ; Register used for slider button values
+NAMEREG sE, BTN_REG       ; Register used for the push button values
+NAMEREG sD, TOTAL_MSB     ; Register used to hold the total MSB
+NAMEREG sC, TOTAL_LSB     ; Register used to hold the total LSB 
+NAMEREG sB, OPERAND_REG   ; Register used to hold the 4-bit operand
+NAMEREG sA, BTN_OP_CNT    ; Register used to hold to number of samples before operation button is considered pressed
+NAMEREG s9, BTN_RESET_CNT ; Register used to hold to number of samples before the reset button is considered pressed
+NAMEREG s8, BTN_PRESSED   ; Register used to hold which buttons have been pressed
+
+
+CONSTANT SLIDER_MUX, 02    ; Mux value used to read the sliders
+CONSTANT BTN_MUX, 03       ; Mux value used to read the buttons
+CONSTANT SEG_7_LSB_MUX, 04 ; Mux used to write to the 7 segment display LSB
+CONSTANT SEG_7_MSB_MUX, 05 ; Mux used to write to the 7 segment display MSB
+
+CONSTANT BTN_OP_FLAG, 01    ; Flag indicating operation button was pressed
+CONSTANT BTN_OP_MASK, FE    ; Mask to clear operation button
+CONSTANT BTN_OP_VAL, 01     ; Raw button value from the button register
+CONSTANT BTN_RESET_FLAG, 02 ; Flag indicating the reset button was pressed
+CONSTANT BTN_RESET_MASK, FD ; Mask to clear the reset button
+CONSTANT BTN_RESET_VAL, 08  ; Raw button value from the button register
+
+CONSTANT OP_ADD,   10 ; Slider value for an add operation
+CONSTANT OP_SUB,   20 ; Slider value for a subtract operation
+CONSTANT OP_SHIFT, 40 ; Slider value for a shift operation
+CONSTANT OP_MULT,  80 ; Slider value for a multiplication operation
+
+
+
+CONSTANT BTN_PUSH_WAIT_COUNT, 05 ; Number of times to poll the button to make sure it is pressed
+
+ADDRESS 000
+
+; Reset all of the totals to zero
+LOAD TOTAL_LSB, 00
+LOAD TOTAL_MSB, 00
+LOAD BTN_PRESSED, 00
+
+; Set the button count to be the wait count
+LOAD BTN_OP_CNT, BTN_PUSH_WAIT_COUNT
+LOAD BTN_RESET_CNT, BTN_PUSH_WAIT_COUNT
+
+; Display the total value
+CALL DISPLAY_TOTAL
+
+; Main loop used to check buttons and dispatch button processing
+CHECK_BUTTON:
+	CALL DELAY
+	INPUT BTN_REG, BTN_MUX
+	; Check to see if any of the buttons were pressed this time around
+	CALL CHECK_OP_REG_BTN_PRESSED
+	CALL CHECK_RESET_BTN_PRESSED
+	
+	; See if any of the button counts are down to zero indicating a button was pressed
+	COMPARE BTN_OP_CNT, 00
+	JUMP Z, OP_BTN_PRESSED
+	COMPARE BTN_RESET_CNT, 00
+	JUMP Z, RESET_BTN_PRESSED
+	
+	; Back to the top to check for button presses
+	JUMP CHECK_BUTTON
+
+;
+; Routine used to check if the reset button was pressed
+;
+;
+CHECK_RESET_BTN_PRESSED:
+	; Test button register and check to see if the reset button was set
+	TEST BTN_REG, BTN_RESET_VAL
+	JUMP NZ, DEC_BTN_CNT
+	
+	; Reset the button count and clear the reset bit
+	LOAD BTN_RESET_CNT, BTN_PUSH_WAIT_COUNT
+	AND BTN_PRESSED, BTN_RESET_MASK
+	RETURN
+	
+DEC_BTN_CNT:
+	SUB BTN_RESET_CNT, 01
+	RETURN
+	
+CHECK_OP_REG_BTN_PRESSED:
+	; Test button register and check to see if the operation button was set
+	TEST BTN_REG, BTN_OP_VAL
+	JUMP NZ, DEC_OP_BUTTON
+	
+	; Reset the button count and clear the button bit
+	LOAD BTN_OP_CNT, BTN_PUSH_WAIT_COUNT
+	AND BTN_PRESSED, BTN_OP_MASK
+	RETURN
+DEC_OP_BUTTON:
+	SUB BTN_OP_CNT, 01
+	RETURN
+
+;
+; Routine used to check if the reset button was pressed
+;
+RESET_BTN_PRESSED:
+	; If the button was already pressed and processed, just return
+	TEST BTN_PRESSED, BTN_RESET_FLAG
+	JUMP C, CHECK_BUTTON
+	
+	; Set the button as set and clear the totals
+	OR BTN_PRESSED, BTN_RESET_FLAG
+	LOAD TOTAL_LSB, 00
+	LOAD TOTAL_MSB, 00
+	CALL DISPLAY_TOTAL
+	JUMP CHECK_BUTTON
+	
+;
+; Routine used to check if the operation button was pressed
+;
+OP_BTN_PRESSED:
+	; If the button was already pressed and processed, just return
+	TEST BTN_PRESSED, BTN_OP_FLAG
+	JUMP C, CHECK_BUTTON
+	
+	; Set the button as pressed and then process the operations
+	OR BTN_PRESSED, BTN_OP_FLAG
+	CALL OPS
+	JUMP CHECK_BUTTON
+
+;
+; Routine used to process the different types of operations
+;
+OPS:
+	; Read the slider value to determine which operation will occur
+	INPUT SLIDER_REG, SLIDER_MUX
+	
+	; Figure out the operand based on the lower nibble
+	LOAD OPERAND_REG, SLIDER_REG
+	AND OPERAND_REG, 0F
+	
+	; Check for addition
+	TEST SLIDER_REG, OP_ADD
+	JUMP NZ, ADD_OP
+
+	; Check for subtraction
+	TEST SLIDER_REG, OP_SUB
+	JUMP NZ, SUBTRACT_OP
+
+	; Check for left shift
+	TEST SLIDER_REG, OP_SHIFT
+	JUMP NZ, SHIFT_LEFT_OP
+	
+	; Check for multiplication
+	TEST SLIDER_REG, OP_MULT
+	JUMP NZ, MULT_OP
+	
+	; Nothing pressed, so just return to button processing
+	JUMP CHECK_BUTTON
+	
+;
+; Routine used to add the operand to the total
+;
+ADD_OP:	
+	ADD TOTAL_LSB, OPERAND_REG
+	ADDCY TOTAL_MSB, 00
+	CALL DISPLAY_TOTAL
+	JUMP CHECK_BUTTON
+
+;
+; Routine used to subtract the operand to the total
+;
+SUBTRACT_OP:	
+	SUB TOTAL_LSB, OPERAND_REG
+	SUBCY TOTAL_MSB, 00
+	CALL DISPLAY_TOTAL
+	JUMP CHECK_BUTTON
+
+;
+; Routine used to left the total by the operand places
+;
+SHIFT_LEFT_OP:
+	TEST OPERAND_REG, FF
+	JUMP NC, CHECK_BUTTON
+SHIFT_LEFT:
+    SL0 TOTAL_LSB
+	SLA TOTAL_MSB
+	SUB OPERAND_REG,01
+	JUMP NZ, SHIFT_LEFT
+	CALL DISPLAY_TOTAL
+	JUMP CHECK_BUTTON
+
+;
+; Routine used to multiply the total by the operand
+;
+; Registers used: s0, s1, s2, s3
+;
+MULT_OP:
+	LOAD s2, 00 ; The MSB of the 24-bit value
+	LOAD s1, 00 ; The middle 8 bits of the 24-bit value
+	LOAD s3, 08 ; The total number of iterations to do
+MULT_LOOP:
+	; Check if the value should be added or just shifted
+	SRA OPERAND_REG
+	JUMP NC, MULT_NO_ADD
+	ADD s1, TOTAL_LSB
+	ADDCY s2, TOTAL_MSB
+
+MULT_NO_ADD:
+	; Shift everything down by one
+	SRA s2
+	SRA s1
+	SRA s0
+	
+	; Decrement the number of bits remaining
+	SUB s3, 01
+	JUMP NZ, MULT_LOOP
+	
+	; Load the least significant 16 bits into the total
+	LOAD TOTAL_LSB, s0 
+	LOAD TOTAL_MSB, s1 
+	CALL DISPLAY_TOTAL
+	JUMP CHECK_BUTTON
+	
+;
+; Routine used to display the current totals on the seven segment display
+;
+DISPLAY_TOTAL:
+	OUTPUT TOTAL_LSB, SEG_7_LSB_MUX; Output the LSB of the total on the LSB of the display
+	OUTPUT TOTAL_MSB, SEG_7_MSB_MUX; Output the MSB of the total on the LSB of the display
+	RETURN
+
+;
+; Method used to delay for a period of time by incrementing three 8 bit registers and waiting for
+; them to get to zero
+; Registers used: s0, s1, s2
+;	
+DELAY:
+	; Load the wait values into the registers
+	LOAD s2, FF
+	LOAD s1, 00
+	LOAD s0, 00
+DELAY_LOOP:	
+	; Add one to the 24-bit number and check for zero
+	ADD s0, 01
+	ADDCY s1, 00
+	ADDCY s2, 00
+	RETURN Z
+	JUMP DELAY_LOOP
